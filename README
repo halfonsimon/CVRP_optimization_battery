@@ -1,0 +1,41 @@
+# Battery Collection CVRP Optimization
+
+Two Jupyter notebooks comparing optimization approaches for e-scooter battery collection routing.
+
+## Problem
+
+Route collection trucks to visit all e-scooters while minimizing total distance. Each scooter visited exactly once, trucks have capacity limits.
+
+## Notebooks
+
+### `Enumeration_solver.ipynb`
+- **Brute force approach** - tests every possible route combination
+- **Guarantees optimal solution** for small problems
+- **Demo**: 4 scooters solved in milliseconds
+- **Limitation**: Exponential scaling (8+ scooters = impractical)
+
+### `OR-Tools_Solver.ipynb` 
+- **Production-ready solver** using Google's OR-Tools
+- **Scales to real problems** - handles 1000+ scooters
+- **Advanced algorithms** - 20+ years of optimization research
+- **Demo**: Switch between small/large scale examples
+
+## Requirements
+
+```bash
+pip install ortools matplotlib numpy
+```
+
+## Usage
+
+1. Open either notebook in Jupyter
+2. Run cells sequentially 
+3. Modify parameters in Cell 2 to test different problem sizes
+
+## Key Insight
+
+Brute force works perfectly for small problems but becomes impossible at scale. OR-Tools makes real-world optimization practical.
+
+---
+
+*Academic project by Simon Halfon & Sinai Abbou*
