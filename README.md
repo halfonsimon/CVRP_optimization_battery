@@ -1,41 +1,63 @@
-# Battery Collection CVRP Optimization
+# Battery Swap Routing Optimization (CVRP)
 
-Two Jupyter notebooks comparing optimization approaches for e-scooter battery collection routing.
+Comparing three algorithmic approaches to solve the **Capacitated Vehicle Routing Problem (CVRP)** applied to e-scooter battery collection — from brute-force enumeration to production-ready optimization.
 
-## Problem
+---
 
-Route collection trucks to visit all e-scooters while minimizing total distance. Each scooter visited exactly once, trucks have capacity limits.
+## The Problem
 
-## Notebooks
+A fleet of collection trucks must visit every e-scooter in a city to swap depleted batteries. Each scooter is visited exactly once, each truck has a capacity limit, and the goal is to **minimize total distance traveled**.
 
-### `Enumeration_solver.ipynb`
-- **Brute force approach** - tests every possible route combination
-- **Guarantees optimal solution** for small problems
-- **Demo**: 4 scooters solved in milliseconds
-- **Limitation**: Exponential scaling (8+ scooters = impractical)
+This is an NP-hard combinatorial optimization problem. The gap between a naive approach and a smart one is the difference between milliseconds and 24,000 years.
 
-### `OR-Tools_Solver.ipynb` 
-- **Production-ready solver** using Google's OR-Tools
-- **Scales to real problems** - handles 1000+ scooters
-- **Advanced algorithms** - 20+ years of optimization research
-- **Demo**: Switch between small/large scale examples
+---
 
-## Requirements
+## Approaches
+
+### `Enumeration_solver.ipynb` — Brute Force
+Tests every possible route combination exhaustively.
+- **Guarantees the optimal solution**
+- Works well up to ~6 scooters
+- Exponential time complexity — becomes completely impractical at scale
+
+| Scooters | Combinations | Time |
+|----------|-------------|------|
+| 4 | ~1,600 | 20ms |
+| 8 | ~4,000,000 | 54s |
+| 15 | ~62 trillion | **24,000 years** |
+
+### `OR-Tools_Solver.ipynb` — Google OR-Tools
+Production-grade solver using constraint propagation and guided local search.
+- **Handles 1,000+ scooters in under 30 seconds**
+- Uses the same MILP formulation with binary variables x^k_ij
+- Configurable between small demo mode and large-scale mode
+
+---
+
+## Formulation
+
+The problem is modeled as a **Mixed-Integer Linear Program (MILP)**:
+
+- **Variables**: Binary x^k_ij — truck k travels from node i to node j
+- **Objective**: Minimize total distance ∑∑∑ d_ij · x^k_ij
+- **Constraints**: Each scooter visited exactly once, capacity limits respected, flow conservation enforced, subtour elimination
+
+---
+
+## Setup
 
 ```bash
 pip install ortools matplotlib numpy
 ```
 
-## Usage
-
-1. Open either notebook in Jupyter
-2. Run cells sequentially 
-3. Modify parameters in Cell 2 to test different problem sizes
-
-## Key Insight
-
-Brute force works perfectly for small problems but becomes impossible at scale. OR-Tools makes real-world optimization practical.
+Open either notebook in Jupyter and run cells sequentially. Problem parameters (number of scooters, trucks, capacity) are all in **Cell 2** — easy to swap between demo and large-scale configurations.
 
 ---
 
-*Academic project by Simon Halfon & Sinai Abbou*
+## Results
+
+The OR-Tools solver finds a high-quality solution for 1,000 scooters across 20 trucks in under 30 seconds — a problem instance where brute force would take longer than the age of the universe.
+
+---
+
+*Academic project — Simon Halfon & Sinai Abbou | Reichman University*
